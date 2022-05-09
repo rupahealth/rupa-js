@@ -1,0 +1,46 @@
+{
+  "name": "@rupa-health/rupa-js",
+  "version": "0.1.0",
+  "description": "Integrate with Rupa using rupa-js.",
+  "module": "dist/index.esm.js",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "scripts": {
+    "build": "node build.js",
+    "postbuild": "tsc --emitDeclarationOnly --declaration src/index.ts --outFile dist/index.d.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rupahealth/rupa-js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rupahealth/rupa-js/issues"
+  },
+  "homepage": "https://github.com/rupahealth/rupa-js#readme",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.23.0",
+    "@typescript-eslint/parser": "^5.23.0",
+    "esbuild": "^0.14.38",
+    "eslint": "^8.15.0",
+    "typescript": "^4.6.4"
+  },
+  "dependencies": {},
+  "peerDependencies": {},
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "ignorePatterns": [
+      "build.js"
+    ]
+  }
+}
