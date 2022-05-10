@@ -42,6 +42,9 @@
     ],
     "ignorePatterns": [
       "build.js"
-    ]
+    ],
+    "rules": {
+      "@typescript-eslint/ban-ts-ignore": "off"
+    }
   }
 }

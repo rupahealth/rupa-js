@@ -1,5 +1,3 @@
-function foo(n: number) {
-  return n;
-}
+import Rupa from "./client";
 
-export default foo;
+export default Rupa;
