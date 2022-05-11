@@ -3,15 +3,13 @@ export type GetPublishableKey = () => Promise<{
   expiresIn: number;
 }>;
 
-export interface OrderIntent {
-  id: string;
-  redirectUrl: string;
-}
-
 export enum ErrorCodes {
   ValidationError = "RupaValidationError",
-  ClientError = "RupaClientError",
+  NotFoundError = "RupaNotFoundError",
+  PermissionDeniedError = "RupaPermissionDeniedError",
+  NotAuthenticatedError = "RupaNotAuthenticatedError",
   UnknownError = "RupaUnknownError",
+  ClientError = "RupaClientError",
 }
 
 export interface UnknownError {
@@ -33,3 +31,11 @@ export interface ClientError {
 }
 
 export type ErrorResponse = UnknownError | ValidationError | ClientError;
+
+export type JSONSerializable =
+| string
+| number
+| boolean
+| null
+| JSONSerializable[]
+| {[key: string]: JSONSerializable}

@@ -1,39 +1,43 @@
-import OrderIntents from "./resources/order-intent";
 import { ErrorCodes, ErrorResponse, GetPublishableKey } from "./types";
 
-class Rupa {
+interface ResponseSuccess<Data> {
+  status: "success";
+  data: Data;
+}
+
+interface ResponseError {
+  status: "error";
+  error: ErrorResponse;
+}
+
+type Response<Data> = ResponseSuccess<Data> | ResponseError;
+
+class APIClient {
   private publishableKey?: string;
   private expiresAt?: Date;
   private getPublishableKey: GetPublishableKey;
 
-  orderIntents: OrderIntents;
-
   constructor(getPublishableKey: GetPublishableKey) {
-    this.getPublishableKey = getPublishableKey;
+    if (!getPublishableKey) {
+      throw Error("Missing required arg: getPublishableKey");
+    }
 
-    // Resources
-    this.orderIntents = new OrderIntents(this.request);
+    this.getPublishableKey = getPublishableKey;
   }
 
-  private async request<Response extends object = object>(
+  async request<Data extends object>(
     relativeUrl: string,
     options:
       | { method: "post"; payload: object; retries?: number }
       | { method: "get"; payload?: undefined; retries?: number } = {
       method: "get",
     }
-  ): Promise<
-    | {
-        data: Response;
-      }
-    | {
-        error: ErrorResponse;
-      }
-  > {
+  ): Promise<Response<Data>> {
     const { method, payload = {}, retries = 0 } = options;
 
     if (retries > 1) {
       return {
+        status: "error",
         error: {
           code: ErrorCodes.ClientError,
           message:
@@ -54,10 +58,10 @@ class Rupa {
       body: JSON.stringify(payload),
     });
 
-    if (response.status / 100 === 2) {
-      const data: Response = await response.json();
+    if (Math.floor(response.status / 100) === 2) {
+      const data: Data = await response.json();
 
-      return { data };
+      return { data, status: "success" };
     } else if (response.status === 401) {
       // If we get a 401, we retry the request after fetching a new key.
       this.refreshPublishableKey({ force: true });
@@ -70,7 +74,7 @@ class Rupa {
 
     const error: ErrorResponse = await response.json();
 
-    return { error };
+    return { error, status: "error" };
   }
 
   private async refreshPublishableKey({
@@ -97,4 +101,4 @@ class Rupa {
   }
 }
 
-export default Rupa;
+export default APIClient;

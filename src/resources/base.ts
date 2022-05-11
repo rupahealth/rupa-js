@@ -1,11 +1,9 @@
-import type Rupa from "../client";
+import APIClient from "../api-client";
 
 export class Resource {
-  // @ts-ignore
-  protected request: typeof Rupa.prototype.request;
+  protected apiClient:  APIClient;
 
-  // @ts-ignore
-  constructor(request: typeof Rupa.prototype.request) {
-    this.request = request;
+  constructor(apiClient: APIClient) {
+    this.apiClient = apiClient;
   }
 }

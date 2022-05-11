@@ -1,9 +1,9 @@
-import { OrderIntent } from "../types";
+import { JSONSerializable } from "../types";
 import { Resource } from "./base";
 
-export default class OrderIntents extends Resource {
-  async create(payload: {
-    returnUrl: string;
+
+export interface OrderIntentRequestData {
+    return_url: string;
     patient: {
       first_name: string;
       last_name: string;
@@ -20,11 +20,37 @@ export default class OrderIntents extends Resource {
         zipcode: string;
       };
     };
-  }) {
-    const data = this.request<OrderIntent>("/order-intents", {
+    metadata: {
+      [index: string]: JSONSerializable
+    }
+}
+
+export interface OrderIntentResponseData {
+  id: string;
+  /*
+   * A URL to redirect the practitioner to where the Order will be created.
+   */
+  redirect_url: string;
+}
+
+export default class OrderIntents extends Resource {
+  async create(payload: OrderIntentRequestData) {
+    const response = await this.apiClient.request<OrderIntentResponseData>("/order-intents/", {
       method: "post",
       payload,
     });
-    return data;
+
+    if (response.status === "success") {
+      return {
+        orderIntent: response.data,
+        status: response.status,
+      }
+    }
+
+    return {
+      orderIntent: undefined,
+      error: response.error,
+      status: response.status,
+    }
   }
 }
