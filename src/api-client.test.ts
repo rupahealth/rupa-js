@@ -85,7 +85,7 @@ describe("Successful requests", () => {
 });
 
 describe("Error handling", () => {
-  test("Returns an error when OrderIntent API errors", async () => {
+  test("Returns an error when a resource endpoint errors", async () => {
     const rupa = new Rupa({ getPublishableKey });
 
     // Send an invalid payload
