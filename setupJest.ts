@@ -2,10 +2,13 @@ import "whatwg-fetch";
 
 import { ErrorCodes } from "./src/types";
 
-async function mockFetch(url: string, config) {
+type FetchParams = Parameters<typeof window.fetch>;
+
+async function mockFetch(url: FetchParams[0], config: FetchParams[1]) {
   switch (url) {
     case "/order-intents/": {
-      const authorization = config.headers.Authorization;
+      // @ts-ignore
+      const authorization = config.headers.Authorization || "";
       if (authorization === "Bearer unauthorized") {
         return {
           ok: false,
@@ -27,7 +30,8 @@ async function mockFetch(url: string, config) {
       }
 
       // Only check patient email exists. That's enough to check the library handles errors properly.
-      const payload = JSON.parse(config.body);
+      // Cast to a String to make TS happy
+      const payload = JSON.parse(String(config.body));
       if (!payload.patient) {
         return {
           ok: false,
