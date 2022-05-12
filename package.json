@@ -7,7 +7,7 @@
   "typings": "dist/index.d.ts",
   "scripts": {
     "build": "node build.js",
-    "postbuild": "tsc --emitDeclarationOnly --declaration src/index.ts --outFile dist/index.d.ts",
+    "postbuild": "tsc --emitDeclarationOnly",
     "test": "jest"
   },
   "repository": {

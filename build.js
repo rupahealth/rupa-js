@@ -4,6 +4,7 @@ const { dependencies = {}, peerDependencies = {} } = require("./package.json");
 const config = {
   entryPoints: ["src/index.ts"],
   bundle: true,
+  minify: true,
   external: Object.keys(dependencies).concat(Object.keys(peerDependencies)),
 };
 

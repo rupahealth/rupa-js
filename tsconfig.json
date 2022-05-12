@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true
-  }
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "outFile": "dist/index.d.ts",
+    "declaration": true
+  },
+  "include": ["src/index.ts"]
 }

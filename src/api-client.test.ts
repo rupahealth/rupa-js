@@ -29,6 +29,12 @@ describe("Successful requests", () => {
       "https://api.rupahealth.com/order-intents/"
     );
 
+    // Check we send version and agent headers
+    // @ts-ignore
+    expect(window.fetch.mock.calls[0][1].headers["X-Rupa-User-Agent"]).toEqual(
+      "RupaJS/0.1.0"
+    );
+
     expect(orderIntent).toEqual({
       id: "ordin_123abc",
       redirect_url: "https://example.com",

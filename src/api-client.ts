@@ -1,3 +1,4 @@
+import { version } from "../package.json";
 import { ErrorCodes, ErrorResponse, GetPublishableKey } from "./types";
 
 interface ResponseSuccess<Data> {
@@ -45,16 +46,14 @@ class APIClient {
     const publishableKey = await this.refreshPublishableKey({
       force: forceRefresh,
     });
+    const headers = this.getHeaders(publishableKey);
 
     let response: globalThis.Response;
 
     try {
       response = await fetch(this.buildAbsoluteUrl(resource), {
         method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${publishableKey}`,
-        },
+        headers,
         body: JSON.stringify(payload),
       });
     } catch (error) {
@@ -85,6 +84,16 @@ class APIClient {
     }
 
     return result;
+  }
+
+  private getHeaders(publishableKey: string) {
+    const rupaUserAgent = `RupaJS/${version}`;
+
+    return {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${publishableKey}`,
+      "X-Rupa-User-Agent": rupaUserAgent,
+    };
   }
 
   private async buildResult<Data>(
