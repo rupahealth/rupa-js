@@ -1,3 +1,3 @@
-import Rupa from "./client";
+import Rupa from "./rupa";
 
 export default Rupa;

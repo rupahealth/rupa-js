@@ -6,7 +6,8 @@ type FetchParams = Parameters<typeof window.fetch>;
 
 async function mockFetch(url: FetchParams[0], config: FetchParams[1]) {
   switch (url) {
-    case "/order-intents/": {
+    case "https://api.rupahealth.com/order-intents/":
+    case "https://api-sandbox.rupahealth.com/order-intents/": {
       // @ts-ignore
       const authorization = config.headers.Authorization || "";
       if (authorization === "Bearer unauthorized") {
@@ -70,4 +71,7 @@ beforeEach(() => {
   /* eslint-disable */
   // @ts-ignore
   window.fetch.mockImplementation(mockFetch);
+});
+afterEach(() => {
+  jest.clearAllMocks();
 });

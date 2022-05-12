@@ -12,21 +12,26 @@ interface ResponseError {
 
 type Response<Data> = ResponseSuccess<Data> | ResponseError;
 
+const API_BASE = "https://api.rupahealth.com";
+const API_SANDBOX_BASE = "https://api-sandbox.rupahealth.com";
+
 class APIClient {
   private publishableKey?: string;
   private expiresAt?: Date;
   private getPublishableKey: GetPublishableKey;
+  private sandbox: boolean;
 
-  constructor(getPublishableKey: GetPublishableKey) {
+  constructor(getPublishableKey: GetPublishableKey, sandbox: boolean) {
     if (!getPublishableKey) {
       throw Error("Missing required arg: getPublishableKey");
     }
 
     this.getPublishableKey = getPublishableKey;
+    this.sandbox = sandbox;
   }
 
   async request<Data extends object>(
-    relativeUrl: string,
+    resource: string,
     options:
       | { method: "post"; payload: object; retries?: number }
       | { method: "get"; payload?: undefined; retries?: number } = {
@@ -35,8 +40,7 @@ class APIClient {
   ): Promise<Response<Data>> {
     const { method, payload = {}, retries = 0 } = options;
 
-    // If this is not the first try at this request, we force a refresh
-    // of the key.
+    // If this is not the first try at this request, we force a key refresh.
     const forceRefresh = retries > 0;
     const publishableKey = await this.refreshPublishableKey({
       force: forceRefresh,
@@ -45,7 +49,7 @@ class APIClient {
     let response: globalThis.Response;
 
     try {
-      response = await fetch(relativeUrl, {
+      response = await fetch(this.buildAbsoluteUrl(resource), {
         method,
         headers: {
           "Content-Type": "application/json",
@@ -64,28 +68,34 @@ class APIClient {
       };
     }
 
+    const result = await this.buildResult<Data>(response);
+    if (result.status === "error") {
+      const isAuthError = [
+        ErrorCodes.NotAuthenticatedError,
+        ErrorCodes.PermissionDeniedError,
+      ].includes(result.error.code);
+      const shouldRetry = isAuthError && retries === 0;
+
+      if (shouldRetry) {
+        return this.request(resource, {
+          ...options,
+          retries: retries + 1,
+        });
+      }
+    }
+
+    return result;
+  }
+
+  private async buildResult<Data>(
+    response: globalThis.Response
+  ): Promise<Response<Data>> {
     if ([200, 201].includes(response.status)) {
       const data: Data = await response.json();
       return { data, status: "success" };
-    } else if ([401, 403].includes(response.status)) {
-      // Give up if it fails more than once
-      if (retries > 0) {
-        const error = await response.json();
-
-        return {
-          status: "error",
-          error,
-        };
-      }
-
-      // Otherwise we try again
-      return this.request(relativeUrl, {
-        ...options,
-        retries: retries + 1,
-      });
     }
 
-    let error: ErrorResponse;
+    let error: ErrorResponse | null;
 
     try {
       error = await response.json();
@@ -106,6 +116,12 @@ class APIClient {
     }
 
     return { error, status: "error" };
+  }
+
+  private buildAbsoluteUrl(resource: string) {
+    const base = this.sandbox ? API_SANDBOX_BASE : API_BASE;
+
+    return `${base}/${resource}/`;
   }
 
   private async refreshPublishableKey({

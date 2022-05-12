@@ -35,7 +35,7 @@ export interface OrderIntentResponseData {
 export default class OrderIntents extends Resource {
   async create(payload: OrderIntentRequestData) {
     const response = await this.apiClient.request<OrderIntentResponseData>(
-      "/order-intents/",
+      "order-intents",
       {
         method: "post",
         payload,
