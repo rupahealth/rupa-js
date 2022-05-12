@@ -35,44 +35,75 @@ class APIClient {
   ): Promise<Response<Data>> {
     const { method, payload = {}, retries = 0 } = options;
 
-    if (retries > 1) {
+    // If this is not the first try at this request, we force a refresh
+    // of the key.
+    const forceRefresh = retries > 0;
+    const publishableKey = await this.refreshPublishableKey({
+      force: forceRefresh,
+    });
+
+    let response: globalThis.Response;
+
+    try {
+      response = await fetch(relativeUrl, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${publishableKey}`,
+        },
+        body: JSON.stringify(payload),
+      });
+    } catch (error) {
       return {
         status: "error",
         error: {
-          code: ErrorCodes.ClientError,
-          message:
-            "Authentication failed, please check getPublishableKey returns a valid publishable key.",
+          code: ErrorCodes.UnknownError,
+          message: "An unknown error occurred.",
+          nativeError: error,
         },
       };
     }
 
-    // Ensure we have an up-to-date key
-    const publishableKey = await this.refreshPublishableKey();
-
-    const response = await fetch(relativeUrl, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${publishableKey}`,
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (Math.floor(response.status / 100) === 2) {
+    if ([200, 201].includes(response.status)) {
       const data: Data = await response.json();
-
       return { data, status: "success" };
-    } else if (response.status === 401) {
-      // If we get a 401, we retry the request after fetching a new key.
-      this.refreshPublishableKey({ force: true });
+    } else if ([401, 403].includes(response.status)) {
+      // Give up if it fails more than once
+      if (retries > 0) {
+        const error = await response.json();
 
+        return {
+          status: "error",
+          error,
+        };
+      }
+
+      // Otherwise we try again
       return this.request(relativeUrl, {
         ...options,
         retries: retries + 1,
       });
     }
 
-    const error: ErrorResponse = await response.json();
+    let error: ErrorResponse;
+
+    try {
+      error = await response.json();
+      return { error, status: "error" };
+    } catch (e) {
+      error = null;
+    }
+
+    if (!error) {
+      // If there's no JSON response, then something went wrong with our API (e.g we're down), in which case the best we can do is return a generic error.
+      return {
+        status: "error",
+        error: {
+          code: ErrorCodes.UnknownError,
+          message: "An unknown error occurred.",
+        },
+      };
+    }
 
     return { error, status: "error" };
   }
@@ -80,6 +111,7 @@ class APIClient {
   private async refreshPublishableKey({
     force = false,
   }: { force?: boolean } = {}) {
+    // Use an existing key if we don't believe it's expired
     if (
       !force &&
       this.publishableKey &&

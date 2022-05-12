@@ -6,30 +6,30 @@ async function mockFetch(url: string, config) {
   switch (url) {
     case "/order-intents/": {
       const authorization = config.headers.Authorization;
-      if (!authorization) {
-        return Promise.reject({
+      if (authorization === "Bearer unauthorized") {
+        return {
           ok: false,
           status: 401,
           json: async () => ({
             code: ErrorCodes.NotAuthenticatedError,
             message: "Not authenticated.",
           }),
-        });
-      } else if (authorization !== "Bearer fake") {
-        return Promise.reject({
+        };
+      } else if (authorization === "Bearer expired") {
+        return {
           ok: false,
           status: 403,
           json: async () => ({
             code: ErrorCodes.PermissionDeniedError,
             message: "Permission denied.",
           }),
-        });
+        };
       }
 
       // Only check patient email exists. That's enough to check the library handles errors properly.
       const payload = JSON.parse(config.body);
       if (!payload.patient) {
-        return Promise.reject({
+        return {
           ok: false,
           status: 403,
           json: async () => ({
@@ -42,7 +42,7 @@ async function mockFetch(url: string, config) {
               },
             },
           }),
-        });
+        };
       }
 
       return {

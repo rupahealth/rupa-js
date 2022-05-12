@@ -15,6 +15,7 @@ export enum ErrorCodes {
 export interface UnknownError {
   code: ErrorCodes.UnknownError;
   message: string;
+  nativeError?: Error;
 }
 
 export interface ValidationError {
@@ -33,9 +34,9 @@ export interface ClientError {
 export type ErrorResponse = UnknownError | ValidationError | ClientError;
 
 export type JSONSerializable =
-| string
-| number
-| boolean
-| null
-| JSONSerializable[]
-| {[key: string]: JSONSerializable}
+  | string
+  | number
+  | boolean
+  | null
+  | JSONSerializable[]
+  | { [key: string]: JSONSerializable };
