@@ -14,7 +14,7 @@ interface ResponseError {
 type Response<Data> = ResponseSuccess<Data> | ResponseError;
 
 const API_BASE = "https://api.rupahealth.com";
-const API_SANDBOX_BASE = "http://localhost:8000/api/public";
+const API_SANDBOX_BASE = "https://api-sandbox.rupahealth.com";
 
 class APIClient {
   private publishableKey?: string;
