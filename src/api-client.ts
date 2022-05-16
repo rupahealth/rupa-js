@@ -1,5 +1,5 @@
 import { version } from "../package.json";
-import { ErrorCodes, ErrorResponse, GetPublishableKey } from "./types";
+import { ErrorCodes, APIError, GetPublishableKey } from "./types";
 
 interface ResponseSuccess<Data> {
   status: "success";
@@ -8,13 +8,13 @@ interface ResponseSuccess<Data> {
 
 interface ResponseError {
   status: "error";
-  error: ErrorResponse;
+  error: APIError;
 }
 
 type Response<Data> = ResponseSuccess<Data> | ResponseError;
 
 const API_BASE = "https://api.rupahealth.com";
-const API_SANDBOX_BASE = "https://api-sandbox.rupahealth.com";
+const API_SANDBOX_BASE = "http://localhost:8000/api/public";
 
 class APIClient {
   private publishableKey?: string;
@@ -104,7 +104,7 @@ class APIClient {
       return { data, status: "success" };
     }
 
-    let error: ErrorResponse | null;
+    let error: APIError | null;
 
     try {
       error = await response.json();

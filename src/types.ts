@@ -31,7 +31,7 @@ export interface ClientError {
   message: string;
 }
 
-export type ErrorResponse = UnknownError | ValidationError | ClientError;
+export type APIError = UnknownError | ValidationError | ClientError;
 
 export type JSONSerializable =
   | string
