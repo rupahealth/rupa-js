@@ -10,7 +10,7 @@ const getPublishableKey = async (key = "valid") => ({
 describe("Client instantiation", () => {
   test("instantiates with getPublishableKey", () => {
     // Just instantiate it to make sure it works
-    new Rupa({ getPublishableKey });
+    new Rupa(getPublishableKey);
   });
 
   test("requires getPublishableKey", () => {

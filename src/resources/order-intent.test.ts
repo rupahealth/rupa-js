@@ -31,7 +31,7 @@ const minimalPayload = {
 
 describe("OrderIntent resource", () => {
   test("Creates with full payload", async () => {
-    const rupa = new Rupa({ getPublishableKey });
+    const rupa = new Rupa(getPublishableKey);
     const { status, orderIntent } = await rupa.orderIntents.create(fullPayload);
 
     // TS doesn't type guard on expect()
@@ -46,7 +46,7 @@ describe("OrderIntent resource", () => {
   });
 
   test("Creates with minimal payload", async () => {
-    const rupa = new Rupa({ getPublishableKey });
+    const rupa = new Rupa(getPublishableKey);
 
     // We're really just checking the types here as the mocking doesn't
     // differentiate between the full and minimal payload.

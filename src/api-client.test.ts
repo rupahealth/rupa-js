@@ -14,7 +14,7 @@ const successfulPayload = {
 
 describe("Successful requests", () => {
   test("Calls the production resource", async () => {
-    const rupa = new Rupa({ getPublishableKey });
+    const rupa = new Rupa(getPublishableKey);
     const { status, orderIntent } = await rupa.orderIntents.create(
       successfulPayload
     );
@@ -42,7 +42,7 @@ describe("Successful requests", () => {
   });
 
   test("Calls the sandbox resource", async () => {
-    const rupa = new Rupa({ getPublishableKey, sandbox: true });
+    const rupa = new Rupa(getPublishableKey, { sandbox: true });
     const { status, orderIntent } = await rupa.orderIntents.create(
       successfulPayload
     );
@@ -66,11 +66,9 @@ describe("Successful requests", () => {
   test("Handles refreshing an expired key", async () => {
     let count = 0;
 
-    const rupa = new Rupa({
-      getPublishableKey: async () => {
-        count += 1;
-        return await getPublishableKey(count === 2 ? "valid" : "expired");
-      },
+    const rupa = new Rupa(async () => {
+      count += 1;
+      return await getPublishableKey(count === 2 ? "valid" : "expired");
     });
     const { status, orderIntent } = await rupa.orderIntents.create(
       successfulPayload
@@ -92,7 +90,7 @@ describe("Successful requests", () => {
 
 describe("Error handling", () => {
   test("Returns an error when a resource endpoint errors", async () => {
-    const rupa = new Rupa({ getPublishableKey });
+    const rupa = new Rupa(getPublishableKey);
 
     // Send an invalid payload
     // @ts-ignore
@@ -124,7 +122,7 @@ describe("Error handling", () => {
       };
     });
 
-    const rupa = new Rupa({ getPublishableKey });
+    const rupa = new Rupa(getPublishableKey);
     const { status, error } = await rupa.orderIntents.create(successfulPayload);
 
     // TS doesn't type guard on expect()
@@ -145,7 +143,7 @@ describe("Error handling", () => {
       throw Error("TypeError");
     });
 
-    const rupa = new Rupa({ getPublishableKey });
+    const rupa = new Rupa(getPublishableKey);
     const { status, error } = await rupa.orderIntents.create(successfulPayload);
 
     // TS doesn't type guard on expect()
@@ -162,12 +160,10 @@ describe("Error handling", () => {
 
   test("Returns an error when refresh token repeatedly fails due to expiration", async () => {
     let count = 0;
-    const rupa = new Rupa({
-      getPublishableKey: async () => {
-        count += 1;
-        // Always fail
-        return await getPublishableKey("expired");
-      },
+    const rupa = new Rupa(async () => {
+      count += 1;
+      // Always fail
+      return await getPublishableKey("expired");
     });
 
     const { status, error } = await rupa.orderIntents.create(successfulPayload);
@@ -187,12 +183,10 @@ describe("Error handling", () => {
 
   test("Returns an error when refresh token repeatedly fails due to being invalid", async () => {
     let count = 0;
-    const rupa = new Rupa({
-      getPublishableKey: async () => {
-        count += 1;
-        // Always fail
-        return await getPublishableKey("unauthorized");
-      },
+    const rupa = new Rupa(async () => {
+      count += 1;
+      // Always fail
+      return await getPublishableKey("unauthorized");
     });
 
     const { status, error } = await rupa.orderIntents.create(successfulPayload);

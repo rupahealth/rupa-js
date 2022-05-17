@@ -7,13 +7,14 @@ class Rupa {
 
   orderIntents: OrderIntents;
 
-  constructor({
-    getPublishableKey,
-    sandbox = false,
-  }: {
-    getPublishableKey: GetPublishableKey;
-    sandbox?: boolean;
-  }) {
+  constructor(
+    getPublishableKey: GetPublishableKey,
+    {
+      sandbox = false,
+    }: {
+      sandbox?: boolean;
+    } = {}
+  ) {
     if (!getPublishableKey) {
       throw Error("Missing required arg: getPublishableKey");
     }
