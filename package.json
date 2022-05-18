@@ -1,15 +1,19 @@
 {
   "name": "@rupa-health/rupa-js",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "Integrate with Rupa using rupa-js.",
   "module": "dist/index.esm.js",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
+  "files": [
+    "dist/*"
+  ],
   "scripts": {
     "build": "node build.js",
     "postbuild": "tsc --build src",
     "test": "jest",
-    "lint": "prettier --check src/"
+    "lint": "prettier --check src/",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
