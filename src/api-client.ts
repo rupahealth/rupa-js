@@ -18,7 +18,6 @@ const API_SANDBOX_BASE = "https://api-sandbox.rupahealth.com";
 
 class APIClient {
   private publishableKey?: string;
-  private expiresAt?: Date;
   private getPublishableKey: GetPublishableKey;
   private sandbox: boolean;
 
@@ -137,24 +136,13 @@ class APIClient {
     force = false,
   }: { force?: boolean } = {}) {
     // Use an existing key if we don't believe it's expired
-    if (
-      !force &&
-      this.publishableKey &&
-      this.expiresAt &&
-      this.expiresAt > new Date()
-    ) {
+    if (!force && this.publishableKey) {
       return this.publishableKey;
     }
 
-    const { expiresIn, publishableKey } = await this.getPublishableKey();
+    this.publishableKey = await this.getPublishableKey();
 
-    const expiresAt = new Date();
-    expiresAt.setSeconds(expiresAt.getSeconds() + expiresIn);
-
-    this.publishableKey = publishableKey;
-    this.expiresAt = expiresAt;
-
-    return publishableKey;
+    return this.publishableKey;
   }
 }
 

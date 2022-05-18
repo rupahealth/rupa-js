@@ -1,7 +1,4 @@
-export type GetPublishableKey = () => Promise<{
-  publishableKey: string;
-  expiresIn: number;
-}>;
+export type GetPublishableKey = () => Promise<string>;
 
 export enum ErrorCodes {
   ValidationError = "RupaValidationError",

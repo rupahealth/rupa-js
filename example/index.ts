@@ -1,21 +1,17 @@
 import Rupa from "@rupa-health/rupa-js";
 
-async function getPublishableKey() {
-  return {
-    publishableKey: "{{ REPLACE_WITH_PUBLISHABLE_KEY }}",
-    expiresIn: 36000,
-  };
-}
+const getPublishableKey = async () =>
+  "pk_7bf3fca6e384960013f0cceae7c519ec86ec1646";
 
-const rupa = new Rupa({ getPublishableKey, sandbox: true });
+const rupa = new Rupa(getPublishableKey, { sandbox: true });
 
 async function createLink() {
   const { error, status, orderIntent } = await rupa.orderIntents.create({
     return_url: "http://localhost:8001",
     patient: {
-      first_name: "Ada",
+      first_name: "Jeremy",
       last_name: "Lovelace",
-      email: "ada@rupahealth.com",
+      email: "jeremy_diff@rupahealth.com",
     },
   });
 
