@@ -101,7 +101,9 @@ element.setAttribute("href", orderIntent.redirect_url);
   // The URL we'll direct practitioners to when they submit their order.
   return_url: string
 
-  // The patient information for the order. If a patient with the given email already exists within the practitioner's clinic, it'll be used. Otherwise a new patient will be created.
+  // The patient information for the order. If a patient with the given
+  // email already exists within the practitioner's clinic, it'll be
+  // used. Otherwise a new patient will be created.
   patient: {
     // These fields are required
     first_name: string,
@@ -120,7 +122,8 @@ element.setAttribute("href", orderIntent.redirect_url);
     },
   },
 
-  // Optional metadata to attach to the order. This will be sent in any order events sent to your app's webhook.
+  // Optional metadata to attach to the order. This will be sent in any
+  // order events sent to your app's webhook.
   metadata: {
     [key: string]: any
   }
@@ -136,20 +139,28 @@ Promise<{
   orderIntent: {
     id: string,
 
-    // A URL you can redirect your practitioner to when they want to create a new order in Rupa.
+    // A URL you can redirect your practitioner to when they want to create
+    // a new order in Rupa.
     redirect_url: string,
-  }
+  },
 
   // If status === "error"
   error: {
-    code: "RupaValidationError" | "RupaPermissionDeniedError" | "RupaAuthenticatedError" | "RupaUnknownError" | "RupaClientError",
+    code:
+      | "RupaValidationError"
+      | "RupaPermissionDeniedError"
+      | "RupaAuthenticatedError"
+      | "RupaUnknownError"
+      | "RupaClientError",
+
+    // A human-readable error message.
     message: string,
 
     // If code === "RupaValidationError"
     fields: {
       // A map from field name to an array of validation messages.
       [field: string]: string[]
-    }
-  }
+    },
+  },
 }>
 ```
