@@ -2,6 +2,8 @@ import Rupa from "./rupa";
 import { getPublishableKey } from "./test-utils";
 import { ErrorCodes } from "./types";
 
+import { version } from "../package.json";
+
 const successfulPayload = {
   return_url: "https://example.com",
   patient: {
@@ -32,7 +34,7 @@ describe("Successful requests", () => {
     // Check we send version and agent headers
     // @ts-ignore
     expect(window.fetch.mock.calls[0][1].headers["X-Rupa-User-Agent"]).toEqual(
-      "RupaJS/0.1.0"
+      `RupaJS/${version}`
     );
 
     expect(orderIntent).toEqual({
