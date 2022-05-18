@@ -1,6 +1,6 @@
 {
   "name": "@rupa-health/rupa-js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Integrate with Rupa using rupa-js.",
   "module": "dist/index.esm.js",
   "main": "dist/index.js",
