@@ -1,5 +1,5 @@
 # @rupa-health/rupa-js
-The official browser-side library for Rupa. You can use this library to allow your practitioners to quickly start new orders using an `OrderIntent` object.
+The official browser-side library for Rupa. You can use this library to allow your practitioners to quickly start new orders from your site.
 
 ## Overview
 ```typescript
