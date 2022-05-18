@@ -129,10 +129,27 @@ element.setAttribute("href", orderIntent.redirect_url);
 
 #### Return
 ```typescript
-{
-  id: string,
+Promise<{
+  status: "success" | "error",
 
-  // A URL you can redirect your practitioner to when they want to create a new order in Rupa.
-  redirect_url: string
-}
+  // If status === "success"
+  orderIntent: {
+    id: string,
+
+    // A URL you can redirect your practitioner to when they want to create a new order in Rupa.
+    redirect_url: string,
+  }
+
+  // If status === "error"
+  error: {
+    code: "RupaValidationError" | "RupaPermissionDeniedError" | "RupaAuthenticatedError" | "RupaUnknownError" | "RupaClientError",
+    message: string,
+
+    // If code === "RupaValidationError"
+    fields: {
+      // A map from field name to an array of validation messages.
+      [field: string]: string[]
+    }
+  }
+}>
 ```

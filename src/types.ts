@@ -31,7 +31,28 @@ export interface ClientError {
   message: string;
 }
 
-export type APIError = UnknownError | ValidationError | ClientError;
+export interface NotFoundError {
+  code: ErrorCodes.NotFoundError;
+  message: string;
+}
+
+export interface NotAuthenticatedError {
+  code: ErrorCodes.NotAuthenticatedError;
+  message: string;
+}
+
+export interface PermissionDeniedError {
+  code: ErrorCodes.PermissionDeniedError;
+  message: string;
+}
+
+export type APIError =
+  | UnknownError
+  | ValidationError
+  | ClientError
+  | NotFoundError
+  | NotAuthenticatedError
+  | PermissionDeniedError;
 
 export type JSONSerializable =
   | string
