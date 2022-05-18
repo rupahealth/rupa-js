@@ -1,10 +1,13 @@
 name: Publish package to npm
 on:
-  release:
-    types: [created]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: The new version type to publish. Must be one of patch, minor, or major.
+        required: true
 jobs:
   test:
-    uses: ./test.yml
+    uses: ./.github/workflows/test.yml
   build:
     runs-on: ubuntu-latest
     steps:
@@ -16,7 +19,11 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       # Install
       - run: npm ci
+      # Update version
+      - run: npm version ${{ github.event.inputs.version }}
+      # Push new commit
+      - run: git push
       # Build and publish
       - run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
