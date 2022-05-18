@@ -10,6 +10,7 @@ jobs:
     uses: ./.github/workflows/test.yml
   build:
     runs-on: ubuntu-latest
+    needs: ["test"]
     steps:
       - uses: actions/checkout@v3
       # Setup .npmrc file to publish to npm
@@ -20,7 +21,10 @@ jobs:
       # Install
       - run: npm ci
       # Update version
-      - run: npm version ${{ github.event.inputs.version }}
+      - run: |
+          git config user.name github-actions
+          git config user.email dev+github-actions@rupahealth.com
+          npm version ${{ github.event.inputs.version }}
       # Push new commit
       - run: git push
       # Build and publish
