@@ -171,6 +171,13 @@ Elements are pre-built UI components you can use to build your Rupa integration.
 
 Elements are created using `Rupa.elements.create`.
 
+```typescript
+const orderButton = rupa.elements.create("orderButton", {
+  orderIntent,
+});
+orderButton.mount("#rupa-button");
+```
+
 #### Parameters
 ```typescript
 // The type of element to create.
