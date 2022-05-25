@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/rupahealth/rupa-js#readme",
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.4",
     "@types/jest": "^27.5.0",
     "@typescript-eslint/eslint-plugin": "^5.23.0",
     "@typescript-eslint/parser": "^5.23.0",

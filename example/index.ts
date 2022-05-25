@@ -1,7 +1,7 @@
 import Rupa from "@rupa-health/rupa-js";
 
 const getPublishableKey = async () =>
-  "pk_7bf3fca6e384960013f0cceae7c519ec86ec1646";
+  "pk_379ac425b04221877a00206d22033e4632cb275e";
 
 const rupa = new Rupa(getPublishableKey, { sandbox: true });
 
@@ -20,8 +20,15 @@ async function createLink() {
     return;
   }
 
+  // Use custom element
   const element = document.querySelector("#order-with-rupa");
   element.setAttribute("href", orderIntent.redirect_url);
+
+  // Use element
+  const orderWithRupa = rupa.elements.create("orderButton", {
+    orderIntent,
+  });
+  orderWithRupa.mount("#shadow");
 }
 
 createLink();

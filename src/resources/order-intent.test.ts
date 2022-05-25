@@ -1,5 +1,5 @@
 import Rupa from "../rupa";
-import { getPublishableKey } from "../test-utils";
+import { getPublishableKey, minimalOrderIntentPayload } from "../test-utils";
 
 const fullPayload = {
   return_url: "https://example.com",
@@ -18,15 +18,6 @@ const fullPayload = {
     },
   },
   metadata: { test: "data" },
-};
-
-const minimalPayload = {
-  return_url: "https://example.com",
-  patient: {
-    first_name: "Ada",
-    last_name: "Lovelace",
-    email: "ada@rupahealth.com",
-  },
 };
 
 describe("OrderIntent resource", () => {
@@ -51,7 +42,7 @@ describe("OrderIntent resource", () => {
     // We're really just checking the types here as the mocking doesn't
     // differentiate between the full and minimal payload.
     const { status, orderIntent } = await rupa.orderIntents.create(
-      minimalPayload
+      minimalOrderIntentPayload
     );
 
     // TS doesn't type guard on expect()
