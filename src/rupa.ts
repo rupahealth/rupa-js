@@ -1,4 +1,5 @@
 import APIClient from "./api-client";
+import Elements from "./elements/elements";
 import OrderIntents from "./resources/order-intent";
 import { GetPublishableKey } from "./types";
 
@@ -6,6 +7,8 @@ class Rupa {
   private apiClient: APIClient;
 
   orderIntents: OrderIntents;
+
+  elements: Elements;
 
   constructor(
     getPublishableKey: GetPublishableKey,
@@ -23,6 +26,9 @@ class Rupa {
 
     // Resources
     this.orderIntents = new OrderIntents(this.apiClient);
+
+    // Elements
+    this.elements = new Elements();
   }
 }
 

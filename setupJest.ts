@@ -1,3 +1,4 @@
+import "@testing-library/jest-dom";
 import "whatwg-fetch";
 
 import { ErrorCodes } from "./src/types";

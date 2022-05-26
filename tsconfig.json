@@ -6,5 +6,6 @@
     "composite": true,
     "esModuleInterop": true
   },
-  "files": ["package.json"]
+  "files": ["package.json"],
+  "include": ["./setupJest.ts"]
 }

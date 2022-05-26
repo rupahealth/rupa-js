@@ -68,7 +68,7 @@ During development, you can use Rupa's sandbox environment by passing `sandbox: 
 const rupa = new Rupa(getPublishableKey, { sandbox: true });
 ```
 
-### `.orderIntents.create`
+### `Rupa.orderIntents.create(data: object)`
 To allow your practitioners to quickly start an order in Rupa from your site, create an `OrderIntent` object. This object takes the patient information for the order and returns a `redirect_url` that you can direct practitioners to. When they visit this URL, the order will created and they'll be redirected to their new order within Rupa. When they submit their order, they'll be shown a button they can click to return to your site (determined by the `return_url` you provide when creating the `OrderIntent`).
 
 You can choose to either create the `OrderIntent` when the page in your app loads or when the practitioners clicks the order button.
@@ -97,7 +97,7 @@ element.setAttribute("href", orderIntent.redirect_url);
 
 #### Parameters
 ```typescript
-{
+data: {
   // The URL we'll direct practitioners to when they submit their order.
   return_url: string
 
@@ -164,3 +164,50 @@ Promise<{
   },
 }>
 ```
+
+
+### `Rupa.elements.create(type, options)`
+Elements are pre-built UI components you can use to build your Rupa integration. Currently the one element provided by the library is the `orderButton`, which allows you to easily add an `Order with Rupa` button to your site.
+
+Elements are created using `Rupa.elements.create`.
+
+```typescript
+const orderButton = rupa.elements.create("orderButton", {
+  orderIntent,
+});
+orderButton.mount("#rupa-button");
+```
+
+#### Parameters
+```typescript
+// The type of element to create.
+type: "orderButton"
+
+// Options for the element. Depends on the `type`. See below.
+options: object
+```
+
+##### `type: "orderButton"`
+The `orderButton` element takes an `OrderIntent` and renders a button that when clicked, takes the practitioner to a new order within Rupa. The appearance of the button can be configured.
+
+```typescript
+options: {
+  // An `OrderIntent`. Required.
+  orderIntent: OrderIntent;
+
+  // Background color for the button. Default: Rupa's brand color.
+  background?: string
+
+  // Text color. Default: #fff.
+  color?: string
+
+  // The text shown on the button. Default: Order with Rupa
+  text?: string
+}
+```
+
+#### Returns
+`Rupa.elements.create` returns an `Element` instance.
+
+### `Element.mount(selector)`
+An element can be mounted to the page by calling the `.mount()` method and passing either a valid selector or a DOM element. The selector can be any selector that can be passed to `document.querySelector`.
