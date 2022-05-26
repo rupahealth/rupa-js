@@ -6,7 +6,7 @@ import { version } from "../package.json";
 
 const successfulPayload = {
   return_url: "https://example.com",
-  patient: {
+  patient_data: {
     first_name: "Ada",
     last_name: "Lovelace",
     email: "ada@rupahealth.com",

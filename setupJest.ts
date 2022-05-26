@@ -34,7 +34,7 @@ async function mockFetch(url: FetchParams[0], config: FetchParams[1]) {
       // Only check patient email exists. That's enough to check the library handles errors properly.
       // Cast to a String to make TS happy
       const payload = JSON.parse(String(config.body));
-      if (!payload.patient) {
+      if (!(payload.patient || payload.patient_data)) {
         return {
           ok: false,
           status: 403,
