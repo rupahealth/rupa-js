@@ -59,9 +59,16 @@ export type JSONSerializable =
   | JSONSerializable[]
   | { [key: string]: JSONSerializable };
 
-export interface OrderIntentRequestData {
+interface BaseOrderIntentRequestData {
   return_url: string;
-  patient: {
+  metadata?: {
+    [index: string]: JSONSerializable;
+  };
+}
+
+interface OrderIntentRequestDataWithPatientData
+  extends BaseOrderIntentRequestData {
+  patient_data: {
     first_name: string;
     last_name: string;
     email: string;
@@ -77,10 +84,16 @@ export interface OrderIntentRequestData {
       zipcode: string;
     };
   };
-  metadata?: {
-    [index: string]: JSONSerializable;
-  };
 }
+
+interface OrderIntentRequestDataWithPatientId
+  extends BaseOrderIntentRequestData {
+  patient: string;
+}
+
+export type OrderIntentRequestData =
+  | OrderIntentRequestDataWithPatientData
+  | OrderIntentRequestDataWithPatientId;
 
 export interface OrderIntent {
   id: string;

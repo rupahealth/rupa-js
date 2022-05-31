@@ -4,7 +4,7 @@ export const getPublishableKey = async (key = "valid") => key;
 
 export const minimalOrderIntentPayload = {
   return_url: "https://example.com",
-  patient: {
+  patient_data: {
     first_name: "Ada",
     last_name: "Lovelace",
     email: "ada@rupahealth.com",
