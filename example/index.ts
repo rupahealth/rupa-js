@@ -8,7 +8,7 @@ const rupa = new Rupa(getPublishableKey, { sandbox: true });
 async function createLink() {
   const { error, status, orderIntent } = await rupa.orderIntents.create({
     return_url: "http://localhost:8001",
-    patient: {
+    patient_data: {
       first_name: "Jeremy",
       last_name: "Lovelace",
       email: "jeremy_diff@rupahealth.com",

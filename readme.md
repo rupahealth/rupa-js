@@ -19,7 +19,7 @@ const rupa = new Rupa(getPublishableKey);
 // Create an OrderIntent for a given patient
 const { error, status, orderIntent } = await rupa.orderIntents.create({
   return_url: "https://example.com",
-  patient: {
+  patient_data: {
     first_name: "Ada",
     last_name: "Lovelace",
     email: "ada@rupahealth.com",
@@ -69,7 +69,7 @@ const rupa = new Rupa(getPublishableKey, { sandbox: true });
 ```
 
 ### `Rupa.orderIntents.create(data: object)`
-To allow your practitioners to quickly start an order in Rupa from your site, create an `OrderIntent` object. This object takes the patient information for the order and returns a `redirect_url` that you can direct practitioners to. When they visit this URL, the order will created and they'll be redirected to their new order within Rupa. When they submit their order, they'll be shown a button they can click to return to your site (determined by the `return_url` you provide when creating the `OrderIntent`).
+To allow your practitioners to quickly start an order in Rupa from your site, create an `OrderIntent` object. This object takes the patient information for the order and returns a `redirect_url` that you can direct practitioners to. When they visit this URL, the order will created, and they'll be redirected to their new order within Rupa. When they submit their order, they'll be shown a button they can click to return to your site (determined by the `return_url` you provide when creating the `OrderIntent`).
 
 You can choose to either create the `OrderIntent` when the page in your app loads or when the practitioners clicks the order button.
 
@@ -77,7 +77,7 @@ You can choose to either create the `OrderIntent` when the page in your app load
 // Create an OrderIntent for a given patient
 const { error, status, orderIntent } = await rupa.orderIntents.create({
   return_url: "https://example.com",
-  patient: {
+  patient_data: {
     first_name: "Ada",
     last_name: "Lovelace",
     email: "ada@rupahealth.com",
@@ -104,7 +104,7 @@ data: {
   // The patient information for the order. If a patient with the given
   // email already exists within the practitioner's clinic, it'll be
   // used. Otherwise a new patient will be created.
-  patient: {
+  patient_data?: {
     // These fields are required
     first_name: string,
     last_name: string,
@@ -120,15 +120,22 @@ data: {
       state: string,
       zipcode: string,
     },
+
+    // The patient ID for the order, if you have it. The patient ID will be
+    // present in any order-related events we send to your webhook, so you
+    // can persist the ID and provide it here instead of `patient_data`.
+    patient?: string
   },
 
   // Optional metadata to attach to the order. This will be sent in any
   // order events sent to your app's webhook.
-  metadata: {
+  metadata?: {
     [key: string]: any
   }
 }
 ```
+
+**You must provide either `patient_data` or `patient`.**
 
 #### Return
 ```typescript
