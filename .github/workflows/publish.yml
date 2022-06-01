@@ -13,6 +13,8 @@ jobs:
     needs: ["test"]
     steps:
       - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.RUPA_BUILDER }}
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v3
         with:
