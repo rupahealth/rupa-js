@@ -36,9 +36,18 @@ element.setAttribute("href", orderIntent.redirect_url);
 ```
 
 ## Installation
+To install via npm:
 ```
 npm install @rupa-health/rupa-js
 ```
+
+To use in a script tag, you can use the library via a CDN:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@rupa-health/rupa-js@0.1.2/dist/index.js"></script>
+```
+
+**NOTE: Ensure you specify the library version**
 
 ## Usage
 
