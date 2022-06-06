@@ -35,3 +35,13 @@ jobs:
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      - name: Push to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.DEPLOY_AWS_ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.DEPOY_AWS_SECRET_ACCESS_KEY }}
+        run: |
+          npm build
+          aws s3 sync ./dist s3://rupahealth-production-rupalabs-scripts/${{ github.event.inputs.version }}
+
+
+
