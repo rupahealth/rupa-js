@@ -66,6 +66,89 @@ interface BaseOrderIntentRequestData {
   };
 }
 
+interface NormalizedBaseOrderIntentRequestData {
+  data: {
+    type: string;
+    attributes: {
+      metadata?: {
+        [index: string]: JSONSerializable;
+      };
+      return_url: string;
+    }
+    relationships: {
+      lab_tests?: {
+        data: [
+          {
+            type: string;
+            id: string;
+          }
+        ]
+      }
+      patient?: {
+        data: {
+          type: string;
+          id: string;
+        }
+      }
+    }
+  }
+}
+
+interface NormalizedOrderIntentRequestDataWithPatientData {
+  data: {
+    type: string;
+    attributes: {
+      metadata?: {
+        [index: string]: JSONSerializable;
+      };
+      return_url: string
+      patient_data: {
+        first_name: string;
+        last_name: string;
+        email: string;
+      }
+    }
+    relationships: {
+      lab_tests?: {
+        data: [
+          {
+            type: string;
+            id: string;
+          }
+        ]
+      }
+    }
+  }
+}
+
+interface NormalizedOrderIntentRequestDataWithPatientId {
+  data: {
+    type: string;
+    attributes: {
+      metadata?: {
+        [index: string]: JSONSerializable;
+      };
+      return_url: string
+    },
+    relationships: {
+      lab_tests?: {
+        data: [
+          {
+            type: string;
+            id: string;
+          }
+        ]
+      }
+      patient: {
+        data: {
+          type: string;
+          id: string;
+        }
+      }
+    }
+  }
+}
+
 interface OrderIntentRequestDataWithPatientData
   extends BaseOrderIntentRequestData {
   patient_data: {
@@ -86,6 +169,10 @@ interface OrderIntentRequestDataWithPatientData
   };
 }
 
+interface OrderIntentRequestDataWithLabTestData extends BaseOrderIntentRequestData {
+  lab_tests?: [string]
+}
+
 interface OrderIntentRequestDataWithPatientId
   extends BaseOrderIntentRequestData {
   patient: string;
@@ -93,7 +180,13 @@ interface OrderIntentRequestDataWithPatientId
 
 export type OrderIntentRequestData =
   | OrderIntentRequestDataWithPatientData
-  | OrderIntentRequestDataWithPatientId;
+  | OrderIntentRequestDataWithPatientId
+  | OrderIntentRequestDataWithLabTestData
+
+export type NormalizedOrderIntentRequestData = 
+  | NormalizedOrderIntentRequestDataWithPatientData
+  | NormalizedOrderIntentRequestDataWithPatientId
+  | NormalizedBaseOrderIntentRequestData
 
 export interface OrderIntent {
   id: string;
@@ -101,4 +194,52 @@ export interface OrderIntent {
    * A URL to redirect the practitioner to where the Order will be created.
    */
   redirect_url: string;
+}
+
+export interface NormalizedOrderIntent {
+  data: {
+    type: string;
+    id: string;
+    attributes: {
+      return_url: string;
+      total_price: number;
+      icd10_codes: string[];
+    }
+    relationships: {
+      patient: {
+        data: {
+          type: string;
+          id: string;
+        }
+      }
+      lab_tests: {
+        meta: {
+          count: number;
+        },
+        data: [
+          {
+            type: string;
+            id: string;
+          }
+        ]
+      }
+      line_items: {
+        meta: {
+          count: number;
+        },
+        data: [
+          {
+            type: string;
+            id: string;
+          }
+        ]
+      }
+      order: {
+        data?: {
+          type: string;
+          id: string;
+        } | null
+      }
+    }
+  }
 }
