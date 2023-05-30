@@ -13,6 +13,10 @@ async function createLink() {
       last_name: "Lovelace",
       email: "jeremy_diff@rupahealth.com",
     },
+    lab_tests: [
+      "labt_123abc",
+      "labt_456def",
+    ]
   });
 
   if (status === "error") {
